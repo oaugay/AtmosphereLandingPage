@@ -17,23 +17,73 @@ function App() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  useEffect(() => {
-    const ctx = gsap.context(() =>{
-      const tl = gsap.timeline({defaults: {ease: "power3.inOut"}})
-      const isMobile = window.innerWidth < 768
-
-      tl.from("logo", {
-        y: -100,
-        opacity: 0,
-        duration: 1,
-      })
-      .from(".nav-link", {
-        y: 100,
-        opacity: 0,
-        duration: 1,
-      })
+      useEffect(() => {
+        const ctx = gsap.context(() => {
+          const tl = gsap.timeline({ defaults: { ease: "power3.inOut" } });
+          const isMobile = window.innerWidth < 768;
+      
+          tl.from(".logo", {
+            y: -100,
+            opacity: 0,
+            duration: 1,
+          })
+          .from(".nav-link", {
+            y: 100,
+            opacity: 0,
+            stagger: 0.1,
+            duration: 1,
+          }, "-=0.5")
+          .from(".title-line", {
+            y: 100,
+            opacity: 0,
+            stagger: 0.2,
+            duration: 1,
+          }, "-=0.3")
+          .from(".description", {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+          }, "-=0.5")
+          .from(".right-section", {
+            x: isMobile ? 0 : 100,
+            y: isMobile ? 50 : 0,
+            opacity: 0,
+            duration: 1,
+          }, "-=0.3")
+          .from(".instructions", {
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+          }, "-=0.5")
+          .from(".button", {
+            x: isMobile ? 0 : -50,
+            y: isMobile ? 30 : 0,
+            opacity: 0,
+            stagger: 0.2,
+            duration: 0.8,
+          });
+      gsap.utils.toArray('.button').forEach(button => {
+        button.addEventListener('mouseenter', () => {
+          gsap.to(button, { scale: 1.05, duration: 0.3 });
+        });
+        button.addEventListener('mouseleave', () => {
+          gsap.to(button, { scale: 1, duration: 0.3 });
+        });
+      });
     })
-  })
+    return () => ctx.revert()
+  }, [])
+
+  useEffect(() => {
+    if(isMenuOpen){
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMenuOpen])
 
 
   return(
@@ -46,7 +96,7 @@ function App() {
             <div className='z-50 font-bold logo'>
               <img src={logo} alt="logo" className='w-[150px] md:w-[200px]'></img>
             </div>
-            <button className='z-50 md:hidden hover:bg-gray-800 p-2 rounded-lg transition-colors' 
+            <button className='z-50 button md:hidden hover:bg-gray-800 p-2 rounded-lg transition-colors' 
             onClick={()=> setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -87,9 +137,9 @@ function App() {
                 Smart and evolutive cloud solutions to help you reach new heights.
               </p>
               <div className='flex md:flex-row flex-col space-y-4 md:space-x-9 md:space-y-0'>
-                <button className='relative bg-green-400 px-6 py-2 rounded-lg w-full md:w-[200px] font-medium 
+                <button className='relative button bg-green-400 px-6 py-2 rounded-lg w-full md:w-[200px] font-medium 
                 text-xl transition-all duration-300'>Start</button>
-                <button className='relative border-2 border-green-400 hover:bg-green-400 px-6 py-2 rounded-lg w-full md:w-[200px] font-medium 
+                <button className='relative button border-2 border-green-400 hover:bg-green-400 px-6 py-2 rounded-lg w-full md:w-[200px] font-medium 
                 text-xl transition-all duration-300'>Contact</button>
               </div>
 
